@@ -1,7 +1,7 @@
 'use client'
 
 import { useMap } from '@y-sweet/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Title from '@/components/Title'
 
 const GRID_SIZE = 10
@@ -11,7 +11,17 @@ const CELL_SIZE_CLASSES = 'w-8 h-8 lg:w-10 lg:h-10'
 
 export function ColorGrid() {
   const items = useMap<string>('colorgrid')
+  const sceneMap = useMap<any>('sceneMap')
   const [color, setColor] = useState<string | null>(COLORS[0])
+
+  useEffect(() => {
+    ;(async () => {
+      const obj = await (await fetch('./data.json')).json()
+      for (const key in obj) {
+        sceneMap.set(key, obj[key])
+      }
+    })()
+  }, [])
 
   return (
     <div className="space-y-3 p-4 lg:p-8">
